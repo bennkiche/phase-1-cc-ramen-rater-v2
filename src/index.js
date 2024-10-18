@@ -1,4 +1,4 @@
-
+const baseUrl = 'http://localhost:3000/ramens';
 document.addEventListener("DOMContentLoaded", main);
 
 function main() {
@@ -7,11 +7,11 @@ function main() {
 }
 
 function displayRamens() {
-    fetch('http://localhost:3000/ramens')
+    fetch(baseUrl)
         .then(response => response.json())
         .then(ramens => {
             const ramenMenu = document.getElementById('ramen-menu');
-            ramenMenu.innerHTML = ''; // Clear existing content
+            ramenMenu.innerHTML = ''; 
             ramens.forEach(ramen => {
                 const ramenImage = document.createElement('img');
                 ramenImage.src = ramen.image;
@@ -24,71 +24,48 @@ function displayRamens() {
 }
 
 function handleClick(ramen) {
-    document.getElementById('detail-image').src = ramen.image;
-    document.getElementById('detail-name').innerText = ramen.name;
-    document.getElementById('detail-description').innerText = ramen.description;
-    document.getElementById('detail-rating').innerText = ramen.rating;
+    document.querySelector('#ramen-detail .detail-image').src = ramen.image;
+    document.querySelector('#ramen-detail .name').textContent = ramen.name;
+    document.querySelector('#ramen-detail .restaurant').textContent = ramen.restaurant;
+    document.getElementById('rating-display').textContent = ramen.rating;
+    document.getElementById('comment-display').textContent = ramen.comment;
 }
 
 function addSubmitListener() {
     const form = document.getElementById('new-ramen');
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-    
-       const newImage = document.createElement('img');
-       newImage.src = newRamen.image; 
-       ramenMenu.appendChild(newImage);
-       const img = ramenMenuDivAfter[ramenMenuDivBefore.length];
-       const ramenMenuDivAfter = document.querySelectorAll('#ramen-menu img');
-       expect(ramenMenuDivAfter.length).toBe(ramenMenuDivBefore.length + 1);
 
-        const newImg = ramenMenuDivAfter[ramenMenuDivAfter.length - 1];
-        expect(newImg.src).toBe(newRamen.image);
-        
+        // Collect form data
+        const name = document.getElementById('new-name').value;
+        const restaurant = document.getElementById('new-restaurant').value;
+        const image = document.getElementById('new-image').value;
+        const rating = document.getElementById('new-rating').value;
+        const comment = document.getElementById('new-comment').value;
 
+        const newRamen = { name, restaurant, image, rating, comment };
 
-
-
-        const name = document.getElementById('new-ramen-name').value;
-        const image = document.getElementById('new-ramen-image').value;
-        const description = document.getElementById('new-ramen-description').value;
-        const rating = document.getElementById('new-ramen-rating').value;
-
-        const newRamen = { name, image, description, rating };
-
+        // Append the new ramen image to the ramen menu
         const ramenMenu = document.getElementById('ramen-menu');
         const ramenImage = document.createElement('img');
         ramenImage.src = newRamen.image;
         ramenImage.alt = newRamen.name;
+
+        // Add event listener to the new image for details display
         ramenImage.addEventListener('click', () => handleClick(newRamen));
         ramenMenu.appendChild(ramenImage);
 
+        // Ensure the new ramen details are displayed correctly
         console.log('Ramen Menu After:', document.querySelectorAll('#ramen-menu img').length);
 
-
-        // Clear form fields
+        // Reset the form after submission
         form.reset();
     });
 }
 
 export {
-  displayRamens,
-  addSubmitListener,
-  handleClick,
-  main,
-
+    displayRamens,
+    addSubmitListener,
+    handleClick,
+    main,
 };
-
-// console.log('Ramen Menu Before:', ramenMenuDivBefore.length);
-// console.log('Ramen Menu After:', ramenMenuDivAfter.length);
-// console.log('New Image Element:', newImg);
-// // A test case that checks error handling
-// describe('Error handling', () => {
-//   it('should handle fetch error gracefully', async () => {
-//       await displayRamens(); // This should trigger the fetch
-
-//       // You can check for specific error handling behavior
-//       expect(document.getElementById('ramen-menu').innerHTML).toBe(''); // Ensure no images are shown
-//       // Add any other assertions you expect to occur on error
-//   });
-// });
